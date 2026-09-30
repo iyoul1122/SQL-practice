@@ -1,10 +1,9 @@
+-- Active: 1790786545269@@127.0.0.1@3306@universitydb
+-- Active: 1790786545269@@127.0.0.1@3306
 CREATE DATABASE UniversityDB;
-GO
+
 
 USE UniversityDB;
-GO
-
-SELECT DB_NAME() AS current_db;
 
 CREATE TABLE classroom(
     building    VARCHAR(15),
@@ -19,7 +18,7 @@ CREATE TABLE department(
     budget      NUMERIC(12,2),
     PRIMARY KEY(dept_name)
 );
-GO
+
 
 CREATE TABLE course(
     course_id   VARCHAR(8),
@@ -27,9 +26,9 @@ CREATE TABLE course(
     dept_name   VARCHAR(20),
     credits     NUMERIC(2,0),
     PRIMARY KEY(course_id),
-    FOREIGN KEY(dept_name) REFERENCES department ON DELETE SET NULL
+    FOREIGN KEY(dept_name) REFERENCES department(dept_name) ON DELETE SET NULL
 );
-GO
+
 
 CREATE TABLE instructor(
     ID          CHAR(5),
@@ -37,9 +36,9 @@ CREATE TABLE instructor(
     dept_name   VARCHAR(20),
     salary      NUMERIC(8,2),
     PRIMARY KEY(ID),
-    FOREIGN KEY(dept_name) REFERENCES department ON DELETE SET NULL
+    FOREIGN KEY(dept_name) REFERENCES department(dept_name) ON DELETE SET NULL
 );
-GO
+
 
 CREATE TABLE section(
     course_id       VARCHAR(8),
@@ -50,10 +49,10 @@ CREATE TABLE section(
     room_number     VARCHAR(7),
     time_slot_id    VARCHAR(4),
     PRIMARY KEY(course_id, sec_id, semester, year),
-    FOREIGN KEY(course_id) REFERENCES course ON DELETE CASCADE,
-    FOREIGN KEY(building, room_number) REFERENCES classroom ON DELETE SET NULL
+    FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE,
+    FOREIGN KEY(building, room_number) REFERENCES classroom(building, room_number) ON DELETE SET NULL
 );
-GO
+
 
 CREATE TABLE teaches(
     ID          CHAR(5),
@@ -62,11 +61,11 @@ CREATE TABLE teaches(
     semester    VARCHAR(6),
     year        NUMERIC(4,0),
     PRIMARY KEY(ID, course_id, sec_id, semester, year),
-    FOREIGN KEY(ID) REFERENCES instructor ON DELETE CASCADE,
+    FOREIGN KEY(ID) REFERENCES instructor(ID) ON DELETE CASCADE,
     FOREIGN KEY(course_id, sec_id, semester, year)
-        REFERENCES section ON DELETE CASCADE
+        REFERENCES section(course_id, sec_id, semester, year) ON DELETE CASCADE
 );
-GO
+
 
 CREATE TABLE student(
     ID          VARCHAR(5),
@@ -74,7 +73,7 @@ CREATE TABLE student(
     dept_name   VARCHAR(20),
     tot_cred    NUMERIC(3,0),
     PRIMARY KEY(ID),
-    FOREIGN KEY(dept_name) REFERENCES department ON DELETE SET NULL
+    FOREIGN KEY(dept_name) REFERENCES department(dept_name) ON DELETE SET NULL
 );
 
 CREATE TABLE takes(
@@ -83,26 +82,25 @@ CREATE TABLE takes(
     sec_id      VARCHAR(8),
     semester    VARCHAR(6),
     year        NUMERIC(4,0),
-    grade       CHAR(2),
+    grade       VARCHAR(2),
     PRIMARY KEY(ID, course_id, year),
-    FOREIGN KEY(ID) REFERENCES student ON DELETE CASCADE,
-    FOREIGN KEY(course_id) REFERENCES course  ON DELETE CASCADE
+    FOREIGN KEY(ID) REFERENCES student(ID) ON DELETE CASCADE,
+    FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE
 );
-GO
+
 
 CREATE TABLE advisor(
     s_ID    VARCHAR(5),
     i_ID    CHAR(5),
     PRIMARY KEY(s_ID),
-    FOREIGN KEY(s_ID) REFERENCES student ON DELETE CASCADE,
-    FOREIGN KEY(i_ID) REFERENCES instructor ON DELETE SET NULL
+    FOREIGN KEY(s_ID) REFERENCES student(ID) ON DELETE CASCADE,
+    FOREIGN KEY(i_ID) REFERENCES instructor(ID) ON DELETE SET NULL
 );
 
 CREATE TABLE prereq(
     course_id   VARCHAR(8),
     prereq_id   VARCHAR(8),
     PRIMARY KEY(course_id, prereq_id),
-    FOREIGN KEY(course_id) REFERENCES course ON DELETE CASCADE,
-    FOREIGN KEY(prereq_id) REFERENCES course ON DELETE CASCADE
+    FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE,
+    FOREIGN KEY(prereq_id) REFERENCES course(course_id) ON DELETE CASCADE
 );
-GO
