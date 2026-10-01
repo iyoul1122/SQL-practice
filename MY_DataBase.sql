@@ -2,7 +2,6 @@
 -- Active: 1790786545269@@127.0.0.1@3306
 CREATE DATABASE UniversityDB;
 
-
 USE UniversityDB;
 
 CREATE TABLE classroom(
@@ -19,7 +18,6 @@ CREATE TABLE department(
     PRIMARY KEY(dept_name)
 );
 
-
 CREATE TABLE course(
     course_id   VARCHAR(8),
     title       VARCHAR(50),
@@ -29,7 +27,6 @@ CREATE TABLE course(
     FOREIGN KEY(dept_name) REFERENCES department(dept_name) ON DELETE SET NULL
 );
 
-
 CREATE TABLE instructor(
     ID          CHAR(5),
     name        VARCHAR(20) NOT NULL,
@@ -38,7 +35,6 @@ CREATE TABLE instructor(
     PRIMARY KEY(ID),
     FOREIGN KEY(dept_name) REFERENCES department(dept_name) ON DELETE SET NULL
 );
-
 
 CREATE TABLE section(
     course_id       VARCHAR(8),
@@ -53,7 +49,6 @@ CREATE TABLE section(
     FOREIGN KEY(building, room_number) REFERENCES classroom(building, room_number) ON DELETE SET NULL
 );
 
-
 CREATE TABLE teaches(
     ID          CHAR(5),
     course_id   VARCHAR(8),
@@ -65,7 +60,6 @@ CREATE TABLE teaches(
     FOREIGN KEY(course_id, sec_id, semester, year)
         REFERENCES section(course_id, sec_id, semester, year) ON DELETE CASCADE
 );
-
 
 CREATE TABLE student(
     ID          VARCHAR(5),
@@ -88,7 +82,6 @@ CREATE TABLE takes(
     FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE
 );
 
-
 CREATE TABLE advisor(
     s_ID    VARCHAR(5),
     i_ID    CHAR(5),
@@ -104,3 +97,16 @@ CREATE TABLE prereq(
     FOREIGN KEY(course_id) REFERENCES course(course_id) ON DELETE CASCADE,
     FOREIGN KEY(prereq_id) REFERENCES course(course_id) ON DELETE CASCADE
 );
+
+SELECT 
+    TABLE_NAME AS referencing_relation, --r1 参照关系
+    COLUMN_NAME AS fk_column,
+    REFERENCED_TABLE_NAME AS referenced_relation, --r2 被参照关系
+    REFERENCED_COLUMN_NAME AS pk_column
+FROM 
+    information_schema.KEY_COLUMN_USAGE
+WHERE 
+    TABLE_SCHEMA = 'universitydb' 
+    AND REFERENCED_TABLE_NAME IS NOT NULL
+ORDER BY 
+    referencing_relation;
