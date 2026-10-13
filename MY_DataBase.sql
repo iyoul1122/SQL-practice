@@ -305,7 +305,44 @@ FROM instructor
 ORDER BY dept_name, salary DESC;
 
 # 阶段四：连接与集合运算
+SELECT DISTINCT ID, name
+FROM instructor NATURAL JOIN teaches
+ORDER BY name;
 
+SELECT *
+FROM instructor
+WHERE ID NOT IN(
+    SELECT ID
+    FROM teaches
+)
+ORDER BY name;
+
+SELECT i.name, s.course_id, s.building, s.room_number
+FROM instructor as i
+JOIN teaches as t ON i.`ID` = t.`ID`
+JOIN section as s ON t.course_id = s.course_id
+                  AND t.sec_id   = s.sec_id
+                  AND t.semester = s.semester
+                  AND t.year     = s.year
+WHERE s.year = 2018 AND s.semester = 'Spring'
+ORDER BY i.name;
+
+SELECT DISTINCT i.name
+FROM instructor as i, instructor as i_
+WHERE i.salary > i_.salary AND i_.dept_name = 'Comp. Sci.'
+ORDER BY i.name;
+
+(
+    SELECT course_id
+    FROM section
+    WHERE year = 2017 AND semester = 'Fall'
+) EXCEPT 
+(
+    SELECT course_id
+    FROM section
+    WHERE year = 2018 AND semester = 'Spring'
+)
+ORDER BY course_id;
 
 # 阶段五：聚集函数与分组
 
