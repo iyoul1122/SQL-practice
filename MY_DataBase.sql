@@ -120,8 +120,151 @@ ALTER TABLE instructor ADD CONSTRAINT ck_salary CHECK (salary > 0);
 ALTER TABLE student MODIFY COLUMN tot_cred DECIMAL(3,0) DEFAULT 0;
 DESC student;
 SHOW CREATE TABLE student;
-# 阶段二：数据装载
 
+# 阶段二：数据装载
+INSERT INTO classroom VALUES
+ ('Packard','101',500),('Painter','514',100),('Taylor','312',100),
+ ('Watson','100',100),('Watson','120',100);
+
+INSERT INTO department VALUES
+ ('Biology','Watson',90000),('Comp. Sci.','Taylor',100000),
+ ('Elec. Eng.','Taylor',85000),('Finance','Painter',120000),
+ ('History','Painter',50000),('Music','Packard',80000),
+ ('Physics','Watson',70000);
+
+INSERT INTO course VALUES
+ ('BIO-101','Intro. to Biology','Biology',4),
+ ('BIO-301','Genetics','Biology',4),
+ ('BIO-399','Computational Biology','Biology',3),
+ ('CS-101','Intro. to Computer Science','Comp. Sci.',4),
+ ('CS-190','Game Design','Comp. Sci.',4),
+ ('CS-315','Robotics','Comp. Sci.',3),
+ ('CS-347','Database System Concepts','Comp. Sci.',3),
+ ('EE-181','Intro. to Digital Systems','Elec. Eng.',3),
+ ('FIN-201','Investment Banking','Finance',3),
+ ('FIN-301','Risk Management','Finance',3),
+ ('HIS-351','World History','History',3),
+ ('MU-199','Music Video Production','Music',3),
+ ('PHY-101','Physical Principles','Physics',4),
+ ('PHY-201','Quantum Physics','Physics',3);
+
+INSERT INTO instructor VALUES
+ ('10101','Srinivasan','Comp. Sci.',65000),
+ ('12121','Wu','Finance',90000),
+ ('15151','Mozart','Music',40000),
+ ('22222','Einstein','Physics',95000),
+ ('32343','El Said','History',60000),
+ ('33456','Gold','Physics',87000),
+ ('45565','Katz','Comp. Sci.',75000),
+ ('58583','Califieri','History',62000),
+ ('76543','Singh','Finance',80000),
+ ('76766','Crick','Biology',72000),
+ ('83821','Brandt','Comp. Sci.',92000),
+ ('98345','Kim','Elec. Eng.',80000);
+
+INSERT INTO student VALUES
+ ('00128','Zhang','Comp. Sci.',102),
+ ('11223','Lee','Comp. Sci.',0),
+ ('12345','Shankar','Comp. Sci.',32),
+ ('19991','Brandt','History',80),
+ ('23121','Chavez','Finance',110),
+ ('44553','Peltier','Physics',56),
+ ('45678','Levy','Physics',46),
+ ('54321','Williams','Comp. Sci.',54),
+ ('55739','Sanchez','Music',38),
+ ('70557','Snow','Physics',0),
+ ('78901','Brown','Comp. Sci.',58),
+ ('98765','Bourikas','Elec. Eng.',98),
+ ('98988','Tanaka','Biology',120);
+
+INSERT INTO section VALUES
+ ('BIO-101','1','Spring',2018,'Painter','514','B'),
+ ('BIO-301','1','Fall',2017,'Painter','514','A'),
+ ('BIO-399','1','Spring',2018,'Watson','100','E'),
+ ('CS-101','1','Fall',2017,'Packard','101','A'),
+ ('CS-101','1','Spring',2018,'Packard','101','A'),
+ ('CS-101','2','Fall',2017,'Taylor','312','B'),
+ ('CS-190','1','Spring',2018,'Taylor','312','E'),
+ ('CS-315','1','Fall',2017,'Watson','120','D'),
+ ('CS-347','1','Fall',2017,'Taylor','312','A'),
+ ('CS-347','1','Spring',2018,'Taylor','312','A'),
+ ('EE-181','1','Spring',2018,'Taylor','312','C'),
+ ('FIN-201','1','Fall',2017,'Painter','514','B'),
+ ('FIN-301','1','Spring',2018,'Packard','101','C'),
+ ('HIS-351','1','Fall',2017,'Painter','514','C'),
+ ('MU-199','1','Spring',2018,'Packard','101','D'),
+ ('PHY-101','1','Fall',2017,'Watson','100','A'),
+ ('PHY-201','1','Spring',2018,'Watson','120','D');
+
+INSERT INTO teaches VALUES
+ ('10101','CS-101','1','Fall',2017),
+ ('10101','CS-315','1','Fall',2017),
+ ('10101','CS-347','1','Fall',2017),
+ ('12121','FIN-201','1','Fall',2017),
+ ('15151','MU-199','1','Spring',2018),
+ ('22222','PHY-101','1','Fall',2017),
+ ('22222','PHY-201','1','Spring',2018),
+ ('32343','HIS-351','1','Fall',2017),
+ ('33456','BIO-399','1','Spring',2018),
+ ('45565','CS-101','1','Spring',2018),
+ ('45565','CS-101','2','Fall',2017),
+ ('76543','FIN-301','1','Spring',2018),
+ ('76766','BIO-101','1','Spring',2018),
+ ('76766','BIO-301','1','Fall',2017),
+ ('83821','CS-190','1','Spring',2018),
+ ('83821','CS-347','1','Spring',2018),
+ ('98345','EE-181','1','Spring',2018);
+
+INSERT INTO takes VALUES
+ ('00128','CS-101','1','Fall',2017,'A'),
+ ('00128','CS-347','1','Fall',2017,'A-'),
+ ('12345','CS-101','1','Fall',2017,'A'),
+ ('12345','CS-190','1','Spring',2018,'A'),
+ ('12345','CS-315','1','Fall',2017,'A'),
+ ('12345','CS-347','1','Fall',2017,'A'),
+ ('19991','HIS-351','1','Fall',2017,'B'),
+ ('23121','FIN-201','1','Fall',2017,'C+'),
+ ('44553','BIO-101','1','Spring',2018,'B'),
+ ('44553','PHY-101','1','Fall',2017,'B-'),
+ ('45678','CS-101','1','Fall',2017,'F'),
+ ('45678','CS-101','1','Spring',2018,'B+'),
+ ('45678','CS-347','1','Fall',2017,'B+'),
+ ('54321','CS-101','1','Spring',2018,'A-'),
+ ('54321','CS-347','1','Fall',2017,'A'),
+ ('55739','MU-199','1','Spring',2018,'B'),
+ ('70557','CS-101','1','Spring',2018,NULL),
+ ('78901','CS-101','1','Fall',2017,'A'),
+ ('78901','CS-347','1','Fall',2017,'A'),
+ ('98765','EE-181','1','Spring',2018,'C'),
+ ('98988','BIO-101','1','Spring',2018,'A'),
+ ('98988','BIO-301','1','Fall',2017,NULL),
+ ('98988','BIO-399','1','Spring',2018,NULL);
+
+INSERT INTO advisor VALUES
+ ('00128','45565'),('12345','10101'),('44553','22222'),
+ ('78901','83821'),('98988','76766'),('55739',NULL);
+
+INSERT INTO prereq VALUES
+ ('BIO-301','BIO-101'),('BIO-399','BIO-301'),('CS-190','CS-101'),
+ ('CS-315','CS-101'),('CS-347','CS-101'),('PHY-201','PHY-101');
+
+INSERT INTO instructor
+    SELECT ID, name, dept_name, 18000
+    FROM student
+    WHERE dept_name = 'Music' AND tot_cred > 30;
+DELETE FROM instructor WHERE ID = '55739';
+
+SELECT
+    (SELECT COUNT(*) FROM classroom)  AS classroom,
+    (SELECT COUNT(*) FROM department) AS department,
+    (SELECT COUNT(*) FROM course)     AS course,
+    (SELECT COUNT(*) FROM instructor) AS instructor,
+    (SELECT COUNT(*) FROM section)    AS section,
+    (SELECT COUNT(*) FROM teaches)    AS teaches,
+    (SELECT COUNT(*) FROM student)    AS student,
+    (SELECT COUNT(*) FROM takes)      AS takes,
+    (SELECT COUNT(*) FROM advisor)    AS advisor,
+    (SELECT COUNT(*) FROM prereq)     AS prereq;
 
 # 阶段三：基础查询
 
