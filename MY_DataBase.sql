@@ -101,9 +101,9 @@ CREATE TABLE prereq(
 );
 
 SELECT 
-    TABLE_NAME AS referencing_relation, --r1 参照关系
+    TABLE_NAME AS referencing_relation,
     COLUMN_NAME AS fk_column,
-    REFERENCED_TABLE_NAME AS referenced_relation, --r2 被参照关系
+    REFERENCED_TABLE_NAME AS referenced_relation,
     REFERENCED_COLUMN_NAME AS pk_column
 FROM 
     information_schema.KEY_COLUMN_USAGE
@@ -113,6 +113,13 @@ WHERE
 ORDER BY 
     referencing_relation;
 
+ALTER TABLE student ADD COLUMN age INT;
+SELECT ID, name, age FROM student;
+ALTER TABLE student DROP COLUMN age;
+ALTER TABLE instructor ADD CONSTRAINT ck_salary CHECK (salary > 0);
+ALTER TABLE student MODIFY COLUMN tot_cred DECIMAL(3,0) DEFAULT 0;
+DESC student;
+SHOW CREATE TABLE student;
 # 阶段二：数据装载
 
 
