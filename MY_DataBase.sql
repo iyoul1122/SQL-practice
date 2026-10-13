@@ -267,7 +267,42 @@ SELECT
     (SELECT COUNT(*) FROM prereq)     AS prereq;
 
 # 阶段三：基础查询
+SELECT name, salary/12 AS monthly_salary
+FROM instructor
+ORDER BY name;
 
+SELECT DISTINCT dept_name
+FROM instructor
+ORDER BY dept_name;
+SELECT
+    (SELECT COUNT(DISTINCT dept_name) 
+     FROM instructor) AS distinct_dept_name,
+    (SELECT COUNT(ALL dept_name)
+     FROM instructor) AS all_dept_name;
+
+SELECT name, salary
+FROM instructor
+WHERE dept_name = 'Comp. Sci.' AND salary > 70000
+ORDER BY name;
+
+SELECT name, salary
+FROM instructor
+WHERE salary BETWEEN 90000 AND 100000
+ORDER BY name;
+
+SELECT *
+FROM instructor
+WHERE name LIKE '%a%'
+ORDER BY name;
+
+SELECT *
+FROM instructor
+WHERE name LIKE '____'
+ORDER BY name;
+
+SELECT dept_name, name, salary
+FROM instructor
+ORDER BY dept_name, salary DESC;
 
 # 阶段四：连接与集合运算
 
