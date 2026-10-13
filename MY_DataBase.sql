@@ -345,7 +345,36 @@ ORDER BY i.name;
 ORDER BY course_id;
 
 # 阶段五：聚集函数与分组
+SELECT AVG(salary) as avg_salary
+FROM instructor
+WHERE dept_name = 'Comp. Sci.';
 
+SELECT COUNT(*)             as all_rows,
+       COUNT(grade)         as not_null_grade,
+       COUNT(DISTINCT `ID`) as distinct_students
+FROM takes;
+
+SELECT dept_name,
+       AVG(salary)  as avg_salary,
+       COUNT(*)     as teachers_num
+FROM instructor
+GROUP BY dept_name
+HAVING AVG(salary) > 80000
+ORDER BY dept_name;
+
+SELECT  c.course_id, c.title,
+        COUNT(t.ID) as stud_num
+FROM course as c LEFT JOIN takes as t ON c.course_id = t.course_id
+GROUP BY c.course_id, c.title
+ORDER BY COUNT(t.ID) DESC, c.course_id;
+
+SELECT s.`ID`, s.name, SUM(c.credits) as earned_credits
+FROM student as s
+JOIN takes as t ON s.`ID` = t.`ID`
+JOIN course as c ON t.course_id = c.course_id
+WHERE t.grade IS NOT NULL AND t.grade <> 'F'
+GROUP BY s.`ID`, s.name
+ORDER BY earned_credits DESC;
 
 #阶段六：嵌套子查询
 
