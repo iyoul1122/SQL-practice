@@ -1,5 +1,7 @@
 -- Active: 1790786545269@@127.0.0.1@3306@universitydb
 -- Active: 1790786545269@@127.0.0.1@3306
+
+# 阶段一：建库建表
 CREATE DATABASE UniversityDB;
 
 USE UniversityDB;
@@ -110,3 +112,27 @@ WHERE
     AND REFERENCED_TABLE_NAME IS NOT NULL
 ORDER BY 
     referencing_relation;
+
+# 阶段二：数据装载
+
+
+# 阶段三：基础查询
+
+
+# 阶段四：连接与集合运算
+
+
+# 阶段五：聚集函数与分组
+
+
+#阶段六：嵌套子查询
+
+
+# 阶段七：数据库修改
+
+
+# 阶段八：NULL与三值逻辑
+
+
+# 阶段九：索引与查询优化
+
