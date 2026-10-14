@@ -377,7 +377,86 @@ GROUP BY s.`ID`, s.name
 ORDER BY earned_credits DESC;
 
 #阶段六：嵌套子查询
+SELECT course_id, title
+FROM course
+WHERE dept_name IN (
+    SELECT dept_name
+    FROM department
+    WHERE building = 'TAylor'
+)
+ORDER BY course_id;
 
+SELECT name
+FROM instructor
+WHERE dept_name NOT IN ('Comp. Sci.', 'Physics')
+ORDER BY name;
+
+SELECT name, salary
+FROM instructor
+WHERE salary > ALL(
+    SELECT salary 
+    FROM instructor
+    WHERE dept_name = 'Comp. Sci.'
+)
+ORDER BY salary;
+
+SELECT DISTINCT course_id
+FROM section as s
+WHERE year = 2017 AND semester = 'Fall' AND EXISTS(
+    SELECT course_id
+    FROM section as s_
+    WHERE year = 2018 AND semester = "Spring" AND s.course_id = s_.course_id
+)
+ORDER BY course_id;
+
+SELECT s.`ID`, s.name
+FROM student as s
+WHERE NOT EXISTS((
+        SELECT course_id
+        FROM course
+        WHERE dept_name = 'Biology'
+    ) EXCEPT (
+        SELECT t.course_id
+        FROM takes as t
+        WHERE t.`ID` = s.`ID`
+    )
+)
+ORDER BY s.ID;
+
+SELECT dept_name, avg_salary
+FROM (
+    SELECT dept_name, AVG(salary) as avg_salary
+    FROM instructor
+    GROUP BY dept_name
+) AS dept_avg_salary
+WHERE avg_salary > 80000
+ORDER BY dept_name;
+
+WITH max_budget(value) as (
+    SELECT MAX(budget)
+    FROM department
+)
+SELECT d.dept_name, d.budget
+FROM department as d, max_budget as m
+WHERE d.budget = m.value;
+
+SELECT d.dept_name,
+       (
+        SELECT COUNT(*)
+        FROM instructor as i
+        WHERE i.dept_name = d.dept_name
+       ) as num_instructors
+FROM department as d
+ORDER BY d.dept_name;
+
+SELECT c.course_id
+FROM course as c
+WHERE (
+    SELECT COUNT(*)
+    FROM section as s
+    WHERE s.year = 2017 AND s.course_id = c.course_id
+) > 1
+ORDER BY c.course_id;
 
 # 阶段七：数据库修改
 
