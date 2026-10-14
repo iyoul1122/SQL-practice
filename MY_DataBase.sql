@@ -458,8 +458,53 @@ WHERE (
 ) > 1
 ORDER BY c.course_id;
 
-# 阶段七：数据库修改
+# 阶段七：数据库修改（用事务语句包裹）
+START TRANSACTION;
+SELECT COUNT(*) FROM instructor;
+DELETE FROM instructor WHERE `ID` = '15151' AND dept_name = 'Music';
+SELECT COUNT(*) FROM instructor;
+ROLLBACK;
 
+START TRANSACTION;
+DELETE FROM instructor
+WHERE salary < (
+    SELECT avg_salary 
+    FROM (SELECT AVG(salary) as avg_salary FROM instructor) as avg
+);
+ROLLBACK;
+
+START TRANSACTION;
+DELETE FROM instructor
+WHERE dept_name IN (
+    SELECT dept_name
+    FROM department
+    WHERE building = 'Waston'
+);
+ROLLBACK;
+
+START TRANSACTION;
+INSERT INTO instructor
+    SELECT ID, name, dept_name, 18000
+    FROM student
+    WHERE dept_name = 'Phisics' AND tot_cred > 50;
+ROLLBACK;
+
+START TRANSACTION;
+UPDATE instructor
+SET salary = CASE
+    WHEN salary > 80000 THEN salary*1.03
+    ELSE salary*1.05
+    END
+;
+ROLLBACK;
+
+START TRANSACTION;
+UPDATE student SET tot_cred = COALESCE((
+    SELECT SUM(c.credits)
+    FROM course as c JOIN takes as t on c.course_id = t.course_id
+    WHERE student.`ID` = t.`ID` AND t.grade IS NOT NULL AND t.grade <> 'F'
+), 0);
+ROLLBACK;
 
 # 阶段八：NULL与三值逻辑
 
